@@ -1,10 +1,10 @@
 <?php
 require_once '../model/Database.php';
 
-class Task extends Database
+class Category extends Database
 {
     // table name
-    protected $tableName = 'task';
+    protected $tableName = 'category';
 
     /**
      * function is used to add record
@@ -127,11 +127,11 @@ class Task extends Database
         return $result;
     }
 
-    public function searchTask($searchText, $start = 0, $limit = 4)
+    public function searchCategory($searchText, $start = 0, $limit = 4)
     {
-        $sql = "SELECT * FROM {$this->tableName} WHERE name LIKE :search OR description LIKE :search ORDER BY id DESC LIMIT {$start},{$limit}";
+        $sql = "SELECT * FROM {$this->tableName} WHERE name LIKE :search ORDER BY id DESC LIMIT {$start},{$limit}";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':search' => "%{$searchText}%"]);
+        $stmt->execute([':search' => "{$searchText}%"]);
         if ($stmt->rowCount() > 0) {
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {

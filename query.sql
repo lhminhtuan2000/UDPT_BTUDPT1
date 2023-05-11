@@ -1,3 +1,0 @@
--- Active: 1681712795190@@127.0.0.1@3306@TaskManagementDB
-
-SELECT * FROM `TASK` ORDER BY id ASC LIMIT 0,2 

@@ -6,15 +6,14 @@
 </head>
 
 <body>
-
-    <h1>Quản lý</h1>
     <div>
-        <p></p>
-        <button id="btn_congviec" class="button" onClick="redirectPage(this)">CÔNG VIỆC</button>
+        <h1>QUẢN LÝ</h1>
     </div>
     <div>
-        <p></p>
-        <button id="btn_loaicongviec" class="button" onClick="redirectPage(this)">LOẠI CÔNG VIỆC</button>
+        <h3 id="btn_congviec" class="button" onClick="redirectPage(this)">CÔNG VIỆC</h3>
+    </div>
+    <div>
+        <h3 id="btn_loaicongviec" class="button" onClick="redirectPage(this)">LOẠI CÔNG VIỆC</h3>
     </div>
     <script>
         function redirectPage(button) {

@@ -35,22 +35,23 @@ function gettaskrow(task) {
             <td class="align-middle">${task.finished_date}</td>
             <td class="align-middle">${task.status}</td>
             <td class="align-middle">
-              <a href="#" class="btn btn-success mr-3 profile" data-toggle="modal" data-target="#taskViewModal"
+              <a href="#" class="btn btn-success mr-3 detailtask" data-toggle="modal" data-target="#taskViewModal"
                 title="Detail" data-id="${task.id}"><i class="fa fa-address-card-o" aria-hidden="true"></i></a>
-              <a href="#" class="btn btn-warning mr-3 edituser" data-toggle="modal" data-target="#taskEditModal"
+              <a href="#" class="btn btn-warning mr-3 edittask" data-toggle="modal" data-target="#taskEditModal"
                 title="Edit" data-id="${task.id}"><i class="fa fa-pencil-square-o fa-lg"></i></a>
-              <a href="#" class="btn btn-danger deleteuser" title="Delete" data-id="${task.id}"><i
+              <a href="#" class="btn btn-danger deletetask" title="Delete" data-id="${task.id}"><i
                   class="fa fa-trash-o fa-lg"></i></a>
             </td>
           </tr>`;
     }
     return taskRow;
 }
+
 // get tasks list
 function gettasks() {
     var pageno = $("#currentpage").val();
     $.ajax({
-        url: "../controller/ajax.php",
+        url: "../controller/TaskController.php",
         type: "GET",
         dataType: "json",
         data: { page: pageno, action: "gettasks" },
@@ -64,7 +65,7 @@ function gettasks() {
                 $.each(rows.tasks, function (index, task) {
                     taskslist += gettaskrow(task);
                 });
-                $("#userstable tbody").html(taskslist);
+                $("#taskstable tbody").html(taskslist);
                 let totaltasks = rows.count;
                 let totalpages = Math.ceil(parseInt(totaltasks) / 4);
                 const currentpage = $("#currentpage").val();
@@ -72,8 +73,8 @@ function gettasks() {
                 $("#overlay").fadeOut();
             }
         },
-        error: function () {
-            console.log("something went wrong");
+        error: function (req, err) {
+            console.log("error message: " + err + req);
         },
     });
 }
@@ -84,19 +85,18 @@ $(document).ready(function () {
         event.preventDefault();
         var formData = {
             name: $("#task_name").val(),
-            description: $("#description").val(),
-            start_date: $("#start_date").val() + " " + $("#start_time").val(),
-            due_date: $("#due_date").val() + " " + $("#due_time").val(),
-            category_id: $("#task_type").val(),
+            description: $("#task_description").val(),
+            start_date:
+                $("#task_start_date").val() + " " + $("#task_start_time").val(),
+            due_date:
+                $("#task_due_date").val() + " " + $("#task_due_time").val(),
+            category_id: $("#task_category_id").val(),
             action: "addtask",
         };
 
-        var alertmsg =
-            $("#taskid").val().length > 0
-                ? "task has been updated Successfully!"
-                : "New task has been added Successfully!";
+        var alertmsg = "New task has been added Successfully!";
         $.ajax({
-            url: "../controller/ajax.php",
+            url: "../controller/TaskController.php",
             type: "POST",
             data: formData,
             beforeSend: function () {
@@ -117,43 +117,32 @@ $(document).ready(function () {
             },
         });
     });
+
     // edit
     $(document).on("submit", "#editform", function (event) {
         event.preventDefault();
-        var pid = $(this).data("taskid");
-        alert("Handler for `submit` called: " + pid);
-        var today = new Date();
-        var date =
-            today.getFullYear() +
-            "-" +
-            (today.getMonth() + 1) +
-            "-" +
-            today.getDate();
-        var time =
-            today.getHours() +
-            ":" +
-            today.getMinutes() +
-            ":" +
-            today.getSeconds();
-        var dateTime = date + " " + time;
+        var pid = $(this).data("id");
+        // alert("Handler for `submit` called: " + $("#task_edit_status").val());
         var formData = {
             id: pid,
-            name: $("#task_name").val(),
-            description: $("#description").val(),
-            start_date: $("#start_date").val() + " " + $("#start_time").val(),
-            due_date: $("#due_date").val() + " " + $("#due_time").val(),
-            category_id: $("#task_type").val(),
-            finished_date: dateTime,
-            status: $("#task_status").val(),
+            name: $("#task_edit_name").val(),
+            description: $("#task_edit_description").val(),
+            start_date:
+                $("#task_edit_start_date").val() +
+                " " +
+                $("#task_edit_start_time").val(),
+            due_date:
+                $("#task_edit_due_date").val() +
+                " " +
+                $("#task_edit_due_time").val(),
+            category_id: $("#task_edit_category_id").val(),
+            status: $("#task_edit_status").val(),
             action: "edittask",
         };
 
-        var alertmsg =
-            $("#taskid").val().length > 0
-                ? "Task has been updated Successfully!"
-                : "New task has been added Successfully!";
+        var alertmsg = "Task has been updated Successfully!";
         $.ajax({
-            url: "../controller/ajax.php",
+            url: "../controller/TaskController.php",
             type: "POST",
             data: formData,
             beforeSend: function () {
@@ -174,6 +163,7 @@ $(document).ready(function () {
             },
         });
     });
+
     // pagination
     $(document).on("click", "ul.pagination li a", function (e) {
         e.preventDefault();
@@ -184,21 +174,19 @@ $(document).ready(function () {
         $this.parent().siblings().removeClass("active");
         $this.parent().addClass("active");
     });
+
     // form add reset on new button
     $("#addnewbtn").on("click", function () {
         $("#addform")[0].reset();
         $("#taskid").val("");
     });
-    //  get user
 
-    $(document).on("click", "a.edituser", function () {
+    //  get task
+    $(document).on("click", "a.edittask", function () {
         var pid = $(this).data("id");
 
-        // alert("Handler for `submit` called: " + pid);
-        // var check_value = $(check_data).data("task_type");
-
         $.ajax({
-            url: "../controller/ajax.php",
+            url: "../controller/TaskController.php",
             type: "GET",
             data: { id: pid, action: "gettask" },
             beforeSend: function () {
@@ -207,20 +195,20 @@ $(document).ready(function () {
             success: function (response) {
                 if (response) {
                     const task = JSON.parse(response);
-                    $("#task_id").val(pid);
-                    $("#task_name").val(task.name);
-                    $("#description").val(task.description);
-                    $("#task_type").val(task.category_id);
-                    $("#task_status").val(task.status);
+                    $("#editform").data("id", task.id); // pass id to editform
+                    $("#task_edit_name").val(task.name);
+                    $("#task_edit_description").val(task.description);
+                    $("#task_edit_category_id").val(task.category_id);
+                    $("#task_edit_status").val(task.status);
 
                     let text_start_date = task.start_date;
                     const start_date = text_start_date.split(" ");
-                    $("#start_date").val(start_date[0]);
-                    $("#start_time").val(start_date[1]);
+                    $("#task_edit_start_date").val(start_date[0]);
+                    $("#task_edit_start_time").val(start_date[1]);
                     let text_due_date = task.due_date;
                     const due_date = text_due_date.split(" ");
-                    $("#due_date").val(due_date[0]);
-                    $("#due_time").val(due_date[1]);
+                    $("#task_edit_due_date").val(due_date[0]);
+                    $("#task_edit_due_time").val(due_date[1]);
                 }
                 $("#overlay").fadeOut();
             },
@@ -231,12 +219,13 @@ $(document).ready(function () {
     });
 
     // delete task
-    $(document).on("click", "a.deleteuser", function (e) {
+    $(document).on("click", "a.deletetask", function (e) {
         e.preventDefault();
         var pid = $(this).data("id");
         if (confirm("Are you sure want to delete this?")) {
+            var alertmsg = "Task has been deleted successfully!";
             $.ajax({
-                url: "../controller/ajax.php",
+                url: "../controller/TaskController.php",
                 type: "GET",
                 dataType: "json",
                 data: { id: pid, action: "deletetask" },
@@ -246,7 +235,7 @@ $(document).ready(function () {
                 success: function (res) {
                     if (res.deleted == 1) {
                         $(".message")
-                            .html("task has been deleted successfully!")
+                            .html(alertmsg)
                             .fadeIn()
                             .delay(3000)
                             .fadeOut();
@@ -254,18 +243,18 @@ $(document).ready(function () {
                         $("#overlay").fadeOut();
                     }
                 },
-                error: function () {
-                    console.log("something went wrong");
+                error: function (req, err) {
+                    console.log("error message: " + err + req);
                 },
             });
         }
     });
-    // get detail
 
-    $(document).on("click", "a.profile", function () {
+    // get detail
+    $(document).on("click", "a.detailtask", function () {
         var pid = $(this).data("id");
         $.ajax({
-            url: "../controller/ajax.php",
+            url: "../controller/TaskController.php",
             type: "GET",
             dataType: "json",
             data: { id: pid, action: "gettask" },
@@ -298,8 +287,8 @@ $(document).ready(function () {
                     $("#detail").html(detail_body);
                 }
             },
-            error: function () {
-                console.log("something went wrong");
+            error: function (req, err) {
+                console.log("error message: " + err + req);
             },
         });
     });
@@ -309,7 +298,7 @@ $(document).ready(function () {
         const searchText = $(this).val();
         if (searchText.length > 1) {
             $.ajax({
-                url: "../controller/ajax.php",
+                url: "../controller/TaskController.php",
                 type: "GET",
                 dataType: "json",
                 data: { searchQuery: searchText, action: "search" },
@@ -319,12 +308,12 @@ $(document).ready(function () {
                         $.each(tasks, function (index, task) {
                             taskslist += gettaskrow(task);
                         });
-                        $("#userstable tbody").html(taskslist);
+                        $("#taskstable tbody").html(taskslist);
                         $("#pagination").hide();
                     }
                 },
-                error: function () {
-                    console.log("something went wrong");
+                error: function (req, err) {
+                    console.log("error message: " + err + req);
                 },
             });
         } else {
