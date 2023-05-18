@@ -20,42 +20,41 @@
 <body>
     <div class="container">
         <div class="alert alert alert-primary" role="alert">
-            <h2 class="text-primary text-center">QUẢN LÝ CÔNG VIỆC</h2>
+            <h2 class="text-primary text-center">QUẢN LÝ LOẠI CÔNG VIỆC</h2>
         </div>
         <div class="alert alert-success text-center message" role="alert">
         </div>
 
         <?php
-        include_once 'add.php';
-        include_once 'detail.php';
-        include_once 'edit.php';
+        include_once 'addCategory.php';
+        include_once 'detailCategory.php';
+        include_once 'editCategory.php';
         ?>
         <div class="row mb-3">
-            <div class="col-3">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#taskAddModal" id="addnewbtn">Thêm mới <i class="fa fa-solid fa-plus"></i></button>
+            <div class="col-2">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal" id="addNewCategoryButton">Thêm mới <i class="fa fa-solid fa-plus"></i></button>
             </div>
-            <div class="col-9">
-                <div class="input-group input-group-lg">
+            <div class="col-4">
+                <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon2"><i class="fa fa-search" aria-hidden="true"></i></span>
                     </div>
-                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="Từ khoá..." id="searchinput">
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="Từ khoá..." id="searchCategoryInput">
                 </div>
             </div>
-        </div>
+            <div class="col-5">
+                <div class="btn-group">
+                    <button type="button" id="deleteSelectedCategoriesButton" class="btn btn-danger">Xoá tuỳ chọn</button>
+                    <button type="button" id="deleteAllCategoriesButton" class="btn btn-danger">Xoá hết</button>
+                </div>
+            </div>
 
-        <?php
-        include_once 'taskstable.php';
-        ?>
-        <nav id="pagination">
-        </nav>
-        <input type="hidden" name="currentpage" id="currentpage" value="1">
-    </div>
-    <!-- <div id="overlay" style="display:none;">
-        <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;"></div>
-        <br />
-        Loading...
-    </div> -->
+            <?php
+            include_once 'categoriestable.php';
+            ?>
+            <nav id="paginationCategory"></nav>
+            <input type="hidden" name="currentpageCategory" id="currentpageCategory" value="1">
+        </div>
 </body>
 
 </html>

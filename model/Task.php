@@ -127,9 +127,9 @@ class Task extends Database
         return $result;
     }
 
-    public function searchTask($searchText, $start = 0, $limit = 4)
+    public function searchTask($searchText)
     {
-        $sql = "SELECT * FROM {$this->tableName} WHERE name LIKE :search OR description LIKE :search ORDER BY id DESC LIMIT {$start},{$limit}";
+        $sql = "SELECT * FROM {$this->tableName} WHERE name LIKE :search OR description LIKE :search ORDER BY id DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':search' => "%{$searchText}%"]);
         if ($stmt->rowCount() > 0) {
@@ -139,5 +139,35 @@ class Task extends Database
         }
 
         return $results;
+    }
+
+    public function filterTaskStatus($filterText)
+    {
+        $sql = "SELECT * FROM {$this->tableName} WHERE status LIKE :filter ORDER BY id DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':filter' => "{$filterText}"]);
+        if ($stmt->rowCount() > 0) {
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $results = [];
+        }
+
+        return $results;
+    }
+
+    // delete all row
+    public function deleteRows()
+    {
+        $sql = "DELETE FROM {$this->tableName}";
+        $stmt = $this->conn->prepare($sql);
+        try {
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 }

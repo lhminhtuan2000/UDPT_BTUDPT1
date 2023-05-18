@@ -122,10 +122,26 @@ VALUES (
     ), (
         6,
         'Họp nhóm làm đồ án thực hành',
-        'Họp nhóm làm đồ án thực hành',
-        '2020-06-17 00:00:00',
-        '2020-06-18 00:00:00',
+        'Họp nhóm làm đồ án thực hành tại cs1',
+        '2023-05-17 11:11:11',
+        '2023-05-18 00:00:00',
         1,
+        'IN PROGRESS'
+    ), (
+        7,
+        'Họp nhóm làm đồ án lý thuyết',
+        'Họp nhóm làm đồ án lý thuyết tại cs2',
+        '2023-05-17 22:22:22',
+        '2023-05-18 00:00:00',
+        1,
+        'IN PROGRESS'
+    ), (
+        8,
+        'Dating',
+        'You have a date with crush on this day',
+        '2023-06-17 12:34:56',
+        '2023-06-18 21:43:55',
+        2,
         'TODO'
     );
 

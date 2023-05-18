@@ -124,29 +124,75 @@ class TaskController
         echo json_encode($results);
         exit();
     }
+
+    public function filterTaskStatus()
+    {
+        $queryString = (!empty($_GET['filterQuery'])) ? trim($_GET['filterQuery']) : '';
+        $results = $this->model->filterTaskStatus($queryString);
+        echo json_encode($results);
+        exit();
+    }
+
+    public function deleteSelectedTasks()
+    {
+        $taskIds = (!empty($_POST['id'])) ? $_POST['id'] : '';
+        if (!empty($taskIds)) {
+            foreach ($taskIds as $value) {
+                $isDeleted = $this->model->deleteRow($value);
+            }
+            if ($isDeleted) {
+                $message = ['deleted' => 1];
+            } else {
+                $message = ['deleted' => 0];
+            }
+            echo json_encode($message);
+            exit();
+        }
+    }
+
+    public function deleteAllTasks()
+    {
+        $isDeleted = $this->model->deleteRows();
+        if ($isDeleted) {
+            $message = ['deleted' => 1];
+        } else {
+            $message = ['deleted' => 0];
+        }
+        echo json_encode($message);
+        exit();
+    }
 }
 
 $controller = new TaskController();
 
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
-        case 'gettasks':
+        case 'getTasks':
             $controller->getAllTasks();
             break;
-        case 'deletetask':
-            $controller->deleteTask();
-            break;
-        case 'addtask':
-            $controller->addTask();
-            break;
-        case 'edittask':
-            $controller->updateTask();
-            break;
-        case 'gettask':
+        case 'getTask':
             $controller->getTaskById();
             break;
-        case 'search':
+        case 'addTask':
+            $controller->addTask();
+            break;
+        case 'editTask':
+            $controller->updateTask();
+            break;
+        case 'searchTask':
             $controller->searchTasks();
+            break;
+        case 'filterTask':
+            $controller->filterTaskStatus();
+            break;
+        case 'deleteTask':
+            $controller->deleteTask();
+            break;
+        case 'deleteSelectedTasks':
+            $controller->deleteSelectedTasks();
+            break;
+        case 'deleteAllTasks':
+            $controller->deleteAllTasks();
             break;
         default:
             http_response_code(500);

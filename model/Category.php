@@ -140,4 +140,20 @@ class Category extends Database
 
         return $results;
     }
+
+    // delete all row
+    public function deleteRows()
+    {
+        $sql = "DELETE FROM {$this->tableName}";
+        $stmt = $this->conn->prepare($sql);
+        try {
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
 }

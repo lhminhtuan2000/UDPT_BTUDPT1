@@ -1,5 +1,5 @@
 <!-- profile modal start -->
-<div class="modal fade" id="taskViewModal" tabindex="-1" role="dialog" aria-labelledby="userViewModalLabel" aria-hidden="true">
+<div class="modal fade" id="categoryViewModal" tabindex="-1" role="dialog" aria-labelledby="userViewModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container" id="detail">
+                <div class="container" id="detailCategory">
                 </div>
             </div>
             <div class="modal-footer">
